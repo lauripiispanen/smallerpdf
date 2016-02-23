@@ -1,7 +1,7 @@
 import subprocess
 import sys
 import os
-from flask import Flask, send_file, request, g
+from flask import Flask, send_file, request, g, Response
 from tempfile import mkdtemp
 from shutil import rmtree
 
@@ -30,7 +30,6 @@ def upload():
         dirname = mkdtemp()
 
         inputFile = dirname + "/in.pdf"
-        outputFile = dirname + "/out.pdf"
 
         file.save(inputFile)
 
@@ -38,19 +37,23 @@ def upload():
             "gs",
             "-dNOPAUSE", "-dBATCH", "-dSAFER",
             "-sDEVICE=pdfwrite",
-            "-sOutputFile=" + outputFile,
+            "-sOutputFile=%stdout",
             "-c", ".setpdfwrite",
             "-f", inputFile
         ]
 
-        subprocess.run(args)
+        process = subprocess.Popen(args, stdout=subprocess.PIPE)
+
+        def stream_out():
+            for c in iter(lambda: process.stdout.read(100), ''):
+                yield c
+
+        return Response(stream_out(), mimetype='application/pdf')
 
         @after_this_request
         def delete_temp_dir(response):
             rmtree(dirname)
             return response
-
-        return send_file(outputFile)
 
     return 'no file given'
 
