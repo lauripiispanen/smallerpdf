@@ -1,27 +1,14 @@
 import subprocess
 import sys
 import os
-from flask import Flask, send_file, request, g, Response, send_from_directory
+from flask import Flask, send_file, request, Response, send_from_directory
 from tempfile import mkdtemp
 from shutil import rmtree
+from ntpath import basename
 
 app = Flask(__name__)
 
 created_directories = []
-
-
-def after_this_request(func):
-    if not hasattr(g, 'call_after_request'):
-        g.call_after_request = []
-    g.call_after_request.append(func)
-    return func
-
-
-@app.after_request
-def per_request_callbacks(response):
-    for func in getattr(g, 'call_after_request', ()):
-        response = func(response)
-    return response
 
 @app.route("/upload", methods=['POST'])
 def upload():
@@ -47,13 +34,12 @@ def upload():
         def stream_out():
             for c in iter(lambda: process.stdout.read(100), ''):
                 yield c
-
-        return Response(stream_out(), mimetype='application/pdf')
-
-        @after_this_request
-        def delete_temp_dir(response):
             rmtree(dirname)
-            return response
+
+        resp = Response(stream_out(), mimetype='application/pdf')
+        resp.headers['Content-Type'] = 'application/pdf'
+        resp.headers['Content-Disposition'] = 'attachment; filename="' + basename(file.filename) + '"'
+        return resp
 
     return 'no file given'
 
