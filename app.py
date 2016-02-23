@@ -1,7 +1,7 @@
 import subprocess
 import sys
 import os
-from flask import Flask, send_file, request, g, Response
+from flask import Flask, send_file, request, g, Response, send_from_directory
 from tempfile import mkdtemp
 from shutil import rmtree
 
@@ -57,6 +57,14 @@ def upload():
 
     return 'no file given'
 
+@app.route('/')
+def send_index():
+    return send_from_directory('public', 'index.html')
+
+
+@app.route('/<path:path>')
+def send_static(path):
+    return send_from_directory('public', path)
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT',5000))
