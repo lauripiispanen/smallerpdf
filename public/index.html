@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SmallerPDF</title>
+    <link rel="stylesheet" href="main.css">
   </head>
   <body>
-    <form action="/upload" enctype="multipart/form-data" method="POST">
-      <input type="file" name="file"></input>
-      <input type="submit"></input>
-    </form>
+    <div class="wrapper">
+      <h1>SmallerPDF</h1>
+      <h3>A shrink-your-PDFs service that can be installed in Heroku with a single click</h3>
+      <form action="/upload" enctype="multipart/form-data" method="POST">
+        <input type="file" name="file" class="file"><br>
+        <input type="submit" class="button">
+      </form>
+    </div>
   </body>
 </html>
