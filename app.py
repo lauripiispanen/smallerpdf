@@ -4,7 +4,7 @@ import os
 from flask import Flask, send_file, request, Response, send_from_directory
 from tempfile import mkdtemp
 from shutil import rmtree
-from ntpath import basename
+from ntpath import basename, splitext
 
 app = Flask(__name__)
 
@@ -36,9 +36,13 @@ def upload():
                 yield c
             rmtree(dirname)
 
+        def file_compressed():
+            base, ext = splitext(basename(file.filename))
+            return base + ".compressed" + ext
+
         resp = Response(stream_out(), mimetype='application/pdf')
         resp.headers['Content-Type'] = 'application/pdf'
-        resp.headers['Content-Disposition'] = 'attachment; filename="' + basename(file.filename) + '"'
+        resp.headers['Content-Disposition'] = 'attachment; filename="' + file_compressed() + '"'
         return resp
 
     return 'no file given'
