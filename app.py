@@ -10,6 +10,10 @@ app = Flask(__name__)
 
 created_directories = []
 
+def add_suffix(file):
+    base, ext = splitext(basename(file))
+    return base + ".compressed" + ext
+
 @app.route("/upload", methods=['POST'])
 def upload():
     file = request.files['file']
@@ -36,13 +40,9 @@ def upload():
                 yield c
             rmtree(dirname)
 
-        def file_compressed():
-            base, ext = splitext(basename(file.filename))
-            return base + ".compressed" + ext
-
         resp = Response(stream_out(), mimetype='application/pdf')
         resp.headers['Content-Type'] = 'application/pdf'
-        resp.headers['Content-Disposition'] = 'attachment; filename="' + file_compressed() + '"'
+        resp.headers['Content-Disposition'] = 'attachment; filename="' + add_suffix(file.filename) + '"'
         return resp
 
     return 'no file given'
