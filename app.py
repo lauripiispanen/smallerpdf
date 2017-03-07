@@ -4,11 +4,15 @@ import os
 from flask import Flask, send_file, request, Response, send_from_directory
 from tempfile import mkdtemp
 from shutil import rmtree
-from ntpath import basename
+from ntpath import basename, splitext
 
 app = Flask(__name__)
 
 created_directories = []
+
+def add_suffix(file):
+    base, ext = splitext(basename(file))
+    return base + ".compressed" + ext
 
 @app.route("/upload", methods=['POST'])
 def upload():
@@ -38,7 +42,7 @@ def upload():
 
         resp = Response(stream_out(), mimetype='application/pdf')
         resp.headers['Content-Type'] = 'application/pdf'
-        resp.headers['Content-Disposition'] = 'attachment; filename="' + basename(file.filename) + '"'
+        resp.headers['Content-Disposition'] = 'attachment; filename="' + add_suffix(file.filename) + '"'
         return resp
 
     return 'no file given'

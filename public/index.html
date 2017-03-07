@@ -4,16 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SmallerPDF</title>
+    <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="main.css">
   </head>
   <body>
     <div class="wrapper">
+      <img src="img/illustration.png" width="320">
       <h1>SmallerPDF</h1>
       <h3>A shrink-your-PDFs service that can be installed in Heroku with a single click</h3>
       <form action="/upload" enctype="multipart/form-data" method="POST">
-        <input type="file" name="file" class="file"><br>
-        <input type="submit" class="button">
+        <input type="file" name="file" class="file">
+        <input type="submit" class="button" value="Compress">
       </form>
     </div>
+    <footer><a href="https://smallerpdf.herokuapp.com/">SmallerPDF</a> &middot; <a href="https://github.com/lauripiispanen/smallerpdf">GitHub Repo</a></footer>
   </body>
 </html>
+
