@@ -13,7 +13,7 @@
       "url": "https://github.com/heroku/heroku-buildpack-python"
     },
     {
-      "url": "https://github.com/elbongurk/heroku-buildpack-ghostscript.git"
+      "url": "https://github.com/lauripiispanen/heroku-buildpack-ghostscript.git"
     }
   ]
 }
