@@ -27,19 +27,22 @@ def upload():
         args = [
             "gs",
             "-dNOPAUSE", "-dBATCH", "-dSAFER",
-            "-dNumRenderingThreads=" + str(os.cpu_count()),
             "-sDEVICE=pdfwrite",
             "-sOutputFile=%stdout",
             "-c", ".setpdfwrite",
             "-f", inputFile
         ]
-
-        process = subprocess.Popen(args, stdout=subprocess.PIPE)
+        proc = subprocess.Popen(args, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         def stream_out():
-            for c in iter(lambda: process.stdout.read(6000), ''):
-                yield c
-            rmtree(dirname)
+            try:
+                outs, err = proc.communicate()
+                yield outs
+            except TimeoutExpired:
+                proc.kill()
+                outs, err = proc.communicate()
+            finally:
+                rmtree(dirname)
 
         resp = Response(stream_out(), mimetype='application/pdf')
         resp.headers['Content-Type'] = 'application/pdf'
