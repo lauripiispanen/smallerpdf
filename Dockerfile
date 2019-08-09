@@ -9,6 +9,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["sh", "-c", "gunicorn -b 0.0.0.0:${PORT} app:app -k eventlet"]
+CMD ["sh", "-c", "gunicorn -b 0.0.0.0:${PORT} app:app -k eventlet --timeout 6000"]
 
 

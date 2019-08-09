@@ -36,7 +36,7 @@ def upload():
         process = subprocess.Popen(args, stdout=subprocess.PIPE)
 
         def stream_out():
-            for c in iter(lambda: process.stdout.read(100), ''):
+            for c in iter(lambda: process.stdout.read(6000), ''):
                 yield c
             rmtree(dirname)
 
