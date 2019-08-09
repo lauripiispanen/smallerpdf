@@ -27,6 +27,7 @@ def upload():
         args = [
             "gs",
             "-dNOPAUSE", "-dBATCH", "-dSAFER",
+            "-dNumRenderingThreads=" + str(os.cpu_count()),
             "-sDEVICE=pdfwrite",
             "-sOutputFile=%stdout",
             "-c", ".setpdfwrite",
