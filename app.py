@@ -27,9 +27,11 @@ def upload():
         args = [
             "gs",
             "-dNOPAUSE", "-dBATCH", "-dSAFER",
+            "-dCompatibilityLevel=1.4",
+            "-dPDFSETTINGS=/screen",
             "-sDEVICE=pdfwrite",
             "-sOutputFile=%stdout",
-            "-c", ".setpdfwrite",
+#            "-c", ".setpdfwrite",
             "-f", inputFile
         ]
         proc = subprocess.Popen(args, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
